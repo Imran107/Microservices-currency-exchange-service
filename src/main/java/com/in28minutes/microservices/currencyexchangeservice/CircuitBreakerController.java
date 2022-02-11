@@ -15,11 +15,15 @@ public class CircuitBreakerController {
 	private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
 	
 	@GetMapping("/sample-api")
-	@Retry(name="default")
+	@Retry(name="sample-api", fallbackMethod="hardcodedResponse")
 	public String sampleAPI(){
 		logger.info("Sample API call recieved");
 		ResponseEntity<String> forEntity = new RestTemplate().getForEntity("http://localhost:8080/some-dummy-url", String.class);
 		return forEntity.getBody();
+	}
+	
+	public String hardcodedResponse(Exception ex){
+		return "fallback response";
 	}
 
 }
